@@ -54,3 +54,11 @@ frontend/traffic_map.html
 
 # All test files will be ignored
 *test*
+.venv-st
+.venv
+__pycache__
+.DS_Store
+.venv
+.venv-st
+__pycache__
+.DS_Store
