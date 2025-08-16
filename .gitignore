@@ -1,6 +1,8 @@
 # Python
 __pycache__/
 *.pyc
+*.py[cod]
+*.so
 
 # Environment
 .env
@@ -16,9 +18,26 @@ data/processed/output/traffic_data_osm_lines_clean.geojson
 !data/processed/comments.txt
 !data/processed/coordinate_map.json
 
+# Virtual envs
+.venv/
+.venv-*/
+.venv*/
+.venv-st/
+venv/
+env/
+
+# Streamlit secrets (local only)
+.streamlit/secrets.toml
+
 # OS-specific
 .DS_Store
 Thumbs.db
+.vscode/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
 
 # IDE
 .vscode/
@@ -26,6 +45,8 @@ Thumbs.db
 
 # Logs
 *.log
+/tmp/
+.cache/
 
 # Miscellaneous
 /scripts/cache/
