@@ -62,3 +62,10 @@ __pycache__
 .venv-st
 __pycache__
 .DS_Store
+
+.venv
+.venv-st
+__pycache__
+.DS_Store
+.ipynb_checkpoints
+*.pyc
