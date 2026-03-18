@@ -50,7 +50,7 @@ def _get_gcp_credentials():
     try:
         from google.oauth2.service_account import Credentials
 
-        if "gcp_service_account" in st.secrets:
+        if hasattr(st, "secrets") and "gcp_service_account" in st.secrets:
             return Credentials.from_service_account_info(st.secrets["gcp_service_account"])
     except Exception:
         pass
@@ -344,11 +344,16 @@ with tab_diag:
         st.json({k: str(v) for k, v in paths.items()})
 
     with st.expander("Config & credentials"):
+        has_secrets = False
+        try:
+            has_secrets = "gcp_service_account" in st.secrets
+        except Exception:
+            pass
         st.json({
             "MODEL_BUCKET": MODEL_BUCKET,
             "MODEL_PREFIX": MODEL_PREFIX,
             "MODEL_DIR": str(MODEL_DIR),
-            "Has gcp_service_account in secrets": "gcp_service_account" in st.secrets,
+            "Has gcp_service_account in secrets": has_secrets,
         })
 
     with st.expander("Probe Google Drive file access"):
