@@ -1,35 +1,43 @@
-# Python
+# ── Python ────────────────────────────────────────────────
 __pycache__/
 *.pyc
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
 
-# Environment
+# ── Virtual environments ──────────────────────────────────
+.venv/
+.venv-*/
+venv/
+env/
+
+# ── Environment & secrets ─────────────────────────────────
 .env
-.venv
+.streamlit/secrets.toml
 
-# Data
+# ── Serialized models (fetch from GCS in production) ──────
+models/*.joblib
+
+# ── Data (keep only small samples) ────────────────────────
 /data/raw/*
 /data/processed/*
 /data/cache/*
-data/processed/output/traffic_data_osm_lines_clean.geojson
-
-# Allow sample data
 !data/processed/comments.txt
 !data/processed/coordinate_map.json
 
-# OS-specific
+# ── OS / Editor ───────────────────────────────────────────
 .DS_Store
 Thumbs.db
-
-# IDE
 .vscode/
 .idea/
 
-# Logs
+# ── Logs & temp ───────────────────────────────────────────
 *.log
+/tmp/
+.cache/
+.ipynb_checkpoints/
 
-# Miscellaneous
-/scripts/cache/
-frontend/traffic_map.html
-
-# All test files will be ignored
-*test*
+# ── Misc ──────────────────────────────────────────────────
+/pipelines/cache/
