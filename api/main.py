@@ -24,6 +24,7 @@ from src.config import (
     ALLOWED_ORIGINS,
     BOROUGHS,
     DATA_YEAR_RANGE,
+    DEFAULT_MODEL,
     FEATURE_COLS,
     MODEL_ALIASES,
 )
@@ -143,10 +144,10 @@ class PredictResponse(BaseModel):
 
 
 @app.post("/predict", response_model=PredictResponse)
-def predict(req: PredictRequest, model: str = "rf"):
+def predict(req: PredictRequest, model: str = DEFAULT_MODEL):
     models = model_loader.ensure_loaded()
 
-    # Resolve short alias ("rf") → display name ("Random Forest")
+    # Resolve short alias ("hgb") → display name ("HistGradientBoosting")
     display_name = MODEL_ALIASES.get(model, model)
     estimator = models.get(display_name)
     if estimator is None:
@@ -157,14 +158,12 @@ def predict(req: PredictRequest, model: str = "rf"):
 
     df = pd.DataFrame([req.dict()])
 
-    # Segmented model returns raw volume; sklearn estimators are trained on log1p
+    # Segmented model returns raw volume directly
     is_segmented = getattr(estimator, "__class__", None).__name__ == "SegmentedModel"
-    yhat = estimator.predict(df)[0]
-
     if is_segmented:
-        volume = float(yhat)
+        volume = float(estimator.predict(df)[0])
     else:
-        # Predict on feature subset only
+        # Standard sklearn models are trained on log1p(Vol)
         df_feat = df[FEATURE_COLS]
         yhat = estimator.predict(df_feat)[0]
         try:
@@ -172,7 +171,7 @@ def predict(req: PredictRequest, model: str = "rf"):
         except Exception:
             volume = float(yhat)
 
-    return PredictResponse(volume=volume, model=display_name)
+    return PredictResponse(volume=max(0, volume), model=display_name)
 
 
 # ── Entry point ──────────────────────────────────────────────────
