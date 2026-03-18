@@ -105,11 +105,11 @@ uvicorn api.main:app --reload
 ## 🛠️ Technologies
 
 | Category      | Tools                                           |
-|---------------|------------------------------------------------|
+|---------------|-------------------------------------------------|
 | Language      | Python 3.11+                                    |
 | ML            | scikit-learn, pandas, numpy, matplotlib         |
 | Geo/Mapping   | folium, geopandas, osmnx, shapely               |
-| API           | FastAPI, uvicorn, pydantic                       |
+| API           | FastAPI, uvicorn, pydantic                      |
 | UI            | Streamlit                                       |
 | Cloud         | Google Cloud Run, Cloud Build, GCS              |
 | DevTools      | Git, Git LFS, GitHub                            |
@@ -118,12 +118,10 @@ uvicorn api.main:app --reload
 
 ## 👥 Contributors
 
-- **Justin Forbes**
-- **Zahir Humphries**
 - **Kate Liu**
-- **Nnaemeka Okonkwo**
 - **Sania Shree**
-
+- **Justin Forbes**
+- **Nnaemeka Okonkwo**
 ---
 
 ## License
