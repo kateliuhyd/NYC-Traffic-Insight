@@ -1,95 +1,124 @@
-# AI4All Traffic & Weather Analysis
+# NYC Traffic Insight
 
 **Data-driven analysis of NYC traffic and weather patterns using machine learning, data engineering, and geospatial visualization.**
 
 ---
 
-##  Project Overview
-
-This project analyzes the correlation between **NYC traffic congestion** and **weather conditions** using:
-- Historical traffic and weather data
-- Predictive machine learning models
-- Geospatial and time-series feature engineering
-- Web-based map visualizations
-
----
-
-## 📁 Directory Structure
+## 📁 Project Structure
 
 ```text
-AI4AllProj/
-├── backend/           # Core backend logic: ML models, merging, feature pipelines
-├── data/              # Raw and processed data files
-│   ├── raw/
-│   ├── processed/
-│   └── cache/
-├── experimental/       # Jupyter notebooks, training experiments
-├── frontend/          # Simple web-based visualization interface
-├── scripts/           # Data processing, transformation, and utilities
-│   └── test/          # Test scripts
-├── .env               # Environment variables
-├── .gitignore
-├── README.md
-└── requirements.txt
+NYC-Traffic-Insight/
+├── src/                    # Shared core modules
+│   ├── config.py           # Centralized configuration
+│   ├── model_loader.py     # GCS fetch + joblib loading
+│   ├── geojson_utils.py    # GeoJSON download/filter + Folium map
+│   └── models/             # ML model definitions
+│       └── segmented_model.py
+├── api/                    # FastAPI backend
+│   └── main.py             # REST API (/predict, /map, /filter)
+├── ui/                     # Streamlit frontend
+│   └── streamlit_app.py    # Interactive UI with map & prediction
+├── training/               # Model training scripts
+│   ├── train_hgb.py        # HistGradientBoosting
+│   ├── train_rf.py         # Random Forest
+│   ├── train_segmented.py  # Segmented model (holiday/snow aware)
+│   ├── save_models.py      # Serialize all models to .joblib
+│   └── test_inference.py   # Sanity check for trained models
+├── pipelines/              # Data processing pipelines
+│   ├── features.py         # Feature engineering
+│   ├── weather_merge.py    # Weather data cleaning & merge
+│   ├── raw_merge.py        # Traffic + weather merge
+│   ├── enrich_weather.py   # Open-Meteo API data collection
+│   ├── convert_csv_to_geojson.py
+│   ├── point_to_linestring.py
+│   └── downsize.py
+├── notebooks/              # Experiments & exploration
+│   ├── models.py           # Base model classes
+│   ├── train_model.py      # Early training experiments
+│   ├── LinearRegression.py
+│   ├── NYC_Traffic_Congestion.py
+│   └── LR_withCorrelationMatrix.ipynb
+├── models/                 # Serialized model files (.joblib)
+├── data/                   # Processed data
+├── RawDataFiles/           # Raw data (weather CSVs, traffic CSV)
+├── requirements.txt
+├── Procfile                # Cloud Run entry point
+├── cloudbuild.yaml         # CI/CD pipeline
+└── README.md
 ```
 
 ---
 
-##  Key Components
+## 🚀 Quick Start
 
-###  Backend
-Located in the `backend/` directory:
-- `app.py`: Main FastAPI app (if used)
-- `linear_regression.py` & `random_forest.py`: Model implementations
-- `features.py`: Feature extraction & transformations
-- `weather_merge.py` & `raw_merge.py`: Data merge utilities
+### 1. Install dependencies
 
-###  Experiments
-Located in `experimental/`:
-- `train_model.py`: Model training script
-- `models.py`: Model loading and saving logic
-- `correlation_analysis.ipynb`: Notebook with EDA and correlation matrices
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-###  Scripts
-Located in `scripts/`:
-- `convert_csv_to_geojson.py`: Converts CSV to GeoJSON
-- `feature_engineering.py`: Adds temporal and weather-based features
-- `enrich_weather.py`: Merges external weather APIs
-- `point_to_linestring.py`, `downsize_data.py`: Spatial/size optimizations
+### 2. Run the Streamlit UI
 
-###  Frontend
-Located in `frontend/`:
-- `index.html`: Landing page
-- `traffic_map.html`: Interactive Folium map
+```bash
+streamlit run ui/streamlit_app.py
+```
+
+### 3. Run the FastAPI backend
+
+```bash
+uvicorn api.main:app --reload
+```
 
 ---
 
-##  Data Sources
+## 🔬 Key Components
 
-- **Traffic Data:**  
-  NYC DOT: [Automated Traffic Volume Counts](https://data.cityofnewyork.us/Transportation/Automated-Traffic-Volume-Counts/btm5-4yqh)
+### Shared Core (`src/`)
+- **`config.py`** — All configuration in one place (Drive IDs, model names, GCS settings)
+- **`model_loader.py`** — Thread-safe lazy model loading with optional GCS fetch
+- **`geojson_utils.py`** — GeoJSON download from Google Drive, filtering, and Folium map building
+- **`models/segmented_model.py`** — SegmentedModel class (holiday/snow-aware dual estimator)
 
-- **Weather Data:**  
-  Open-Meteo API & historical CSVs  
-  Merged across 2014–2024 across multiple VMs for resilience
+### API (`api/`)
+- FastAPI app with `/predict` (POST), `/map` (GET), `/filter` (GET), `/healthz`, `/ping`
+- Supports model selection via short aliases (`rf`, `hgb`, `seg`)
+
+### UI (`ui/`)
+- Streamlit app with Map, Predict, and Diagnostics tabs
+- Human-friendly prediction inputs (hour slider, weekday dropdown, month selector)
+
+### Training (`training/`)
+- Separate scripts for each model type (HGB, RF, Segmented)
+- `save_models.py` for batch training and serialization
 
 ---
 
-## Technologies
+## 📊 Data Sources
 
-| Type          | Tools/Libraries                                 |
-|---------------|-------------------------------------------------|
-| Language      | Python 3.13, HTML, JavaScript                   |
-| ML Libraries  | `scikit-learn`, `pandas`, `numpy`, `matplotlib` |
-| Geo/Mapping   | `folium`, `geopandas`, `osmnx`, `shapely`       |
-| API / Backend | `FastAPI`, `requests`, `uvicorn`                |
-| DevTools      | Git, VSCode, GitHub, Jupyter Notebooks          |
+- **Traffic Data:** NYC DOT [Automated Traffic Volume Counts](https://data.cityofnewyork.us/Transportation/Automated-Traffic-Volume-Counts/btm5-4yqh)
+- **Weather Data:** [Open-Meteo API](https://open-meteo.com/) (historical hourly, 2014–2024)
 
 ---
 
-##  Contributors
+## 🛠️ Technologies
 
-- **Justin Forbes**  
+| Category      | Tools                                           |
+|---------------|------------------------------------------------|
+| Language      | Python 3.11+                                    |
+| ML            | scikit-learn, pandas, numpy, matplotlib         |
+| Geo/Mapping   | folium, geopandas, osmnx, shapely               |
+| API           | FastAPI, uvicorn, pydantic                       |
+| UI            | Streamlit                                       |
+| Cloud         | Google Cloud Run, Cloud Build, GCS              |
+| DevTools      | Git, Git LFS, GitHub                            |
+
+---
+
+## 👥 Contributors
+
+- **Justin Forbes**
 - **Zahir Humphries**
 - **Kate Liu**
 - **Nnaemeka Okonkwo**
@@ -99,3 +128,4 @@ Located in `frontend/`:
 
 ## License
 
+MIT

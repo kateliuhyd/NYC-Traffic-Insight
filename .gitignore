@@ -1,71 +1,40 @@
-# Python
+# ── Python ────────────────────────────────────────────────
 __pycache__/
 *.pyc
 *.py[cod]
 *.so
+*.egg-info/
+dist/
+build/
 
-# Environment
-.env
-.venv
-
-# Data
-/data/raw/*
-/data/processed/*
-/data/cache/*
-data/processed/output/traffic_data_osm_lines_clean.geojson
-
-# Allow sample data
-!data/processed/comments.txt
-!data/processed/coordinate_map.json
-
-# Virtual envs
+# ── Virtual environments ──────────────────────────────────
 .venv/
 .venv-*/
-.venv*/
-.venv-st/
 venv/
 env/
 
-# Streamlit secrets (local only)
+# ── Environment & secrets ─────────────────────────────────
+.env
 .streamlit/secrets.toml
 
-# OS-specific
+# ── Data (keep only small samples) ────────────────────────
+/data/raw/*
+/data/processed/*
+/data/cache/*
+!data/processed/comments.txt
+!data/processed/coordinate_map.json
+
+# ── OS / Editor ───────────────────────────────────────────
 .DS_Store
 Thumbs.db
 .vscode/
-
-# OS / editors
-.DS_Store
-.idea/
-.vscode/
-
-# IDE
-.vscode/
 .idea/
 
-# Logs
+# ── Logs & temp ───────────────────────────────────────────
 *.log
 /tmp/
 .cache/
+.ipynb_checkpoints/
 
-# Miscellaneous
-/scripts/cache/
-frontend/traffic_map.html
-
-# All test files will be ignored
-*test*
-.venv-st
-.venv
-__pycache__
-.DS_Store
-.venv
-.venv-st
-__pycache__
-.DS_Store
-
-.venv
-.venv-st
-__pycache__
-.DS_Store
-.ipynb_checkpoints
-*.pyc
+# ── Misc ──────────────────────────────────────────────────
+/pipelines/cache/
