@@ -17,6 +17,9 @@ env/
 .env
 .streamlit/secrets.toml
 
+# ── Serialized models (fetch from GCS in production) ──────
+models/*.joblib
+
 # ── Data (keep only small samples) ────────────────────────
 /data/raw/*
 /data/processed/*

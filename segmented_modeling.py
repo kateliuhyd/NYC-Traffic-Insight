@@ -1,1 +1,0 @@
-from SegmentedModeling.SegmentedModeling import SegmentedModel
