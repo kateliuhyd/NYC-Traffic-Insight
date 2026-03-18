@@ -4,7 +4,8 @@ __pycache__/
 
 # Environment
 .env
-.venv
+.venv/
+.venv-*/
 
 # OS-specific
 .DS_Store
@@ -17,18 +18,13 @@ Thumbs.db
 # Logs
 *.log
 
-# Miscellaneous
-/scripts/*
-/frontend/*
-/backend/*
-/data/*
-/experimental/*
-/traffic_volume_models/*
-/RawDataFiles/*
-RandomForestTrafficModel_prediction.png
+# Data & models (too large for Cloud Run image)
+/data/
+/RawDataFiles/
+/models/
 
+# Dev files not needed in production
 .gitattributes
 .gitignore
 LICENSE
 README.md
-
