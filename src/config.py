@@ -1,0 +1,59 @@
+"""
+Centralized configuration for the NYC Traffic Insight project.
+
+All magic constants, file IDs, model names, and environment-based
+config live here so that api/ and ui/ never hard-code them.
+"""
+
+import os
+from pathlib import Path
+
+# ── Project root ──────────────────────────────────────────────────
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+# ── Google Drive ──────────────────────────────────────────────────
+GDRIVE_GEOJSON_FILE_ID = os.getenv(
+    "GDRIVE_GEOJSON_FILE_ID",
+    "1wO3NjqVdg_GUpoEv1JpJHxZoV20Zz-Uq",
+)
+
+# ── GCS model storage ────────────────────────────────────────────
+MODEL_BUCKET = os.getenv("MODEL_BUCKET", "").strip()
+MODEL_PREFIX = os.getenv("MODEL_PREFIX", "").strip().strip("/")
+MODEL_DIR = Path(os.getenv("MODEL_DIR", "/tmp/models")).resolve()
+
+# ── Model registry ───────────────────────────────────────────────
+# key = display name (used in UI & API), value = filename on disk
+EXPECTED_MODELS: dict[str, str] = {
+    "HistGradientBoosting": "hgb_model.joblib",
+    "Random Forest":        "rf_model.joblib",
+    "Segmented HGB":        "segmented_model.joblib",
+}
+
+# Short aliases accepted by the FastAPI /predict endpoint
+MODEL_ALIASES: dict[str, str] = {
+    "hgb": "HistGradientBoosting",
+    "rf":  "Random Forest",
+    "seg": "Segmented HGB",
+}
+
+# Directory where .joblib files are baked into the image
+MODELS_PATH = PROJECT_ROOT / "models"
+
+# ── NYC constants ─────────────────────────────────────────────────
+NYC_CENTER = (40.739, -73.952)
+BOROUGHS = ["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"]
+DATA_YEAR_RANGE = range(2014, 2025)
+
+# ── CORS (production should override via env) ────────────────────
+ALLOWED_ORIGINS = os.getenv(
+    "CORS_ORIGINS", "*"
+).split(",")
+
+# ── Feature columns used by all sklearn models ────────────────────
+FEATURE_COLS = [
+    "hour_sin", "hour_cos",
+    "wd_sin",   "wd_cos",
+    "month_sin", "month_cos",
+    "vol_lag_1", "vol_roll_3h", "vol_roll_24h",
+]
